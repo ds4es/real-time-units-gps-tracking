@@ -5,9 +5,9 @@ import uuid
 import time
 
 #READ COORDINATES FROM GEOJSON
-input_file = open('./data/bus3.json')
+input_file = open('./data/service_alpha.json')
 json_array = json.load(input_file)
-coordinates = json_array['features'][0]['geometry']['coordinates']
+coordinates = json_array['data']
 
 #GENERATE UUID
 def generate_uuid():
@@ -15,20 +15,21 @@ def generate_uuid():
 
 #KAFKA PRODUCER
 client = KafkaClient(hosts="localhost:9092")
-topic = client.topics['geodata_final123']
+topic = client.topics['geodata_stream_topic_123']
 producer = topic.get_sync_producer()
 
 #CONSTRUCT MESSAGE AND SEND IT TO KAFKA
 data = {}
-data['busline'] = '00003'
+data['service'] = 'alpha'
 
 def generate_checkpoint(coordinates):
     i = 0
     while i < len(coordinates):
-        data['key'] = data['busline'] + '_' + str(generate_uuid())
-        data['timestamp'] = str(datetime.utcnow())
-        data['latitude'] = coordinates[i][1]
-        data['longitude'] = coordinates[i][0]
+        data['key'] = data['service'] + '_' + str(generate_uuid())
+        data['datetime'] = str(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
+        data['unit'] = coordinates[i]['unit']
+        data['latitude'] = coordinates[i]['coordinates'][1]
+        data['longitude'] = coordinates[i]['coordinates'][0]
         message = json.dumps(data)
         print(message)
         producer.produce(message.encode('ascii'))
