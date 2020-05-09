@@ -14,7 +14,7 @@ Forked from: https://github.com/code-and-dogs/liveMaps
 
 ## Install prerequisites (for RHEL 8/CentOS 8)
 ```bash
-# Install prerequisites package
+# Install prerequisite packages
 sudo dnf install java-11-openjdk wget tmux -y
 ```
 
@@ -30,6 +30,7 @@ Setup environment variables that will be used by the following commands for your
 ```bash
 export BROKER_IP_ADDRESS=localhost
 export BROKER_PORT=9092
+export YOUR_TOPIC_NAME=geodata_stream_topic_123
 ```
 Here we place Zookeeper, Kafka, producers apps and the consumer app under the same host that's why we set `localhost` here.
 
@@ -44,7 +45,7 @@ tmux send-keys "~/kafka/bin/zookeeper-server-start.sh ~/kafka/config/zookeeper.p
 # configured.  Otherwise, it will use the value returned from 
 # java.net.InetAddress.getCanonicalHostName().
 echo "
-advertised.listeners=PLAINTEXT://${broker_ip_address}:${broker_port}
+advertised.listeners=PLAINTEXT://${BROKER_IP_ADDRESS}:${BROKER_PORT}
 " | tee -a ~/kafka/config/server.properties
 
 # Start Kafka server in a tmux session
@@ -73,7 +74,7 @@ python kafka_stream_producer_beta.py
 
 We don't need any retention for our service as we only want last GPS location updates. Therfore we setup the topic retention to 0 ms. (By default the retention is set to 168 hours, cf. [Kafka documentation - log.retention.hours](https://kafka.apache.org/documentation/#log.retention.hours))  
 ```bash
- ~/kafka/bin/kafka-configs.sh --bootstrap-server localhost:9092 --alter --topic geodata_stream_topic_123 --add-config retention.ms=0
+ ~/kafka/bin/kafka-configs.sh --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --alter --topic ${YOUR_TOPIC_NAME} --add-config retention.ms=0
 ```
 
 For how long data is stored in kafka server? https://stackoverflow.com/questions/49978708/for-how-long-data-is-stored-in-kafka-server
@@ -82,22 +83,22 @@ For how long data is stored in kafka server? https://stackoverflow.com/questions
 
 Create a Kafka topic
 ```bash
-~/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic your_topic_name --config retention.hours=hours_to_keep_log_file
+~/kafka/bin/kafka-topics.sh --create --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --replication-factor 1 --partitions 1 --topic ${YOUR_TOPIC_NAME} --config retention.hours=hours_to_keep_log_file
 ```
 
 List all Kafka topics
 ```bash
-~/kafka/bin/kafka-topics.sh --list --zookeeper localhost
+~/kafka/bin/kafka-topics.sh --list --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT}
 ```
 
 Check a Kafka topic information
 ```bash
-~/kafka/bin/kafka-topics.sh --describe --zookeeper localhost --topic your_topic_name
+~/kafka/bin/kafka-topics.sh --describe --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --topic ${YOUR_TOPIC_NAME}
 ```
 
 Delete a Kafka topic
 ```bash
-./bin/kafka-topics.sh --zookeeper localhost --delete --topic your_topic_name
+~/kafka/bin/kafka-topics.sh --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --delete --topic ${YOUR_TOPIC_NAME}
 ```
 
 ## Reference
