@@ -5,7 +5,7 @@ import uuid
 import time
 
 #READ COORDINATES FROM GEOJSON
-input_file = open('./data/service_alpha.json')
+input_file = open('./data/data_service_beta.json')
 json_array = json.load(input_file)
 coordinates = json_array['data']
 
@@ -20,7 +20,7 @@ producer = topic.get_sync_producer()
 
 #CONSTRUCT MESSAGE AND SEND IT TO KAFKA
 data = {}
-data['service'] = 'alpha'
+data['service'] = 'beta'
 
 def generate_checkpoint(coordinates):
     i = 0

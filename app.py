@@ -19,8 +19,8 @@ def get_messages(topicname):
     client = get_kafka_client()
     def events():
         for i in client.topics[topicname].get_simple_consumer(
-    		# nécessaire pour éviter de récupérer d'ancienne données
-    		# permet de ne récupérer que de nouvelles données
+            # The 2 following parameters avoid recovering old data
+            # to only get latest/new data
     		auto_offset_reset=OffsetType.LATEST,
     		reset_offset_on_start=True
     	):
