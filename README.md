@@ -59,7 +59,7 @@ tmux send-keys "~/kafka/bin/kafka-server-start.sh ~/kafka/config/server.properti
 # To list tmux active sessions
 tmux ls
 # To re-open a tmux session
-tmux attach-session -t <session_identifier> # ici jekyll
+tmux attach-session -t <session_identifier>
 # To end a tmux session
 tmux kill-session -t <session_identifier>
 ```
@@ -114,16 +114,22 @@ We don't need any retention for our service as we only want last GPS location up
 
 #### To serve under Apache
 ```
+# Install Apache
 sudo dnf install httpd -y
+
+# Create directory to store your virtual hosts available and enabled
 sudo mkdir /etc/httpd/sites-available /etc/httpd/sites-enabled
 
+# Tell Apache to look for virtual hosts in the sites-enabled directory
 echo '
 IncludeOptional sites-enabled/*.conf
 ' | sudo tee -a /etc/httpd/conf/httpd.conf
 
+# Setup your virtual host
 echo '
 <VirtualHost *:80>
-    ServerName your_server_name
+	# Optional
+    ServerName your_domain_name 
 
     ProxyPreserveHost On
     ProxyPass / http://127.0.0.1:5001/
@@ -131,8 +137,13 @@ echo '
 </VirtualHost>
 ' | sudo tee /etc/httpd/sites-available/example.com.conf
 
+# Enable it with a symbolic link
 sudo ln -s /etc/httpd/sites-available/your_domain_name.conf /etc/httpd/sites-enabled/your_domain_name.conf
+# Start or restart Apache
+
 sudo systemctl restart httpd
+```
+The app should be broadcast under your server ip address and `your_domain_name`.
 
 ## Kafka basic commands
 
