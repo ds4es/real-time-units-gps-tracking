@@ -15,13 +15,14 @@ Forked from: https://github.com/code-and-dogs/liveMaps
 ## Install prerequisites (for RHEL 8/CentOS 8)
 ```bash
 # Install prerequisite packages
-sudo dnf install java-11-openjdk wget tmux -y
+sudo dnf install java-11-openjdk wget tmux git python3 -y
 ```
 
 ## Download, setup and start Kafka and Zookeeper
 ```bash
+mkdir -p ~/kafka
 # Download and extract Kafka under $HOME/kafka
-curl -s ~/Downloads https://downloads.apache.org/kafka/2.5.0/kafka_2.13-2.5.0.tgz | tar -xvzf --strip 1 -C ~/kafka
+curl -s ~/Downloads https://downloads.apache.org/kafka/2.5.0/kafka_2.13-2.5.0.tgz | tar -xvz --strip 1 -C ~/kafka
 # To permit Kafka topic deletion
 echo "delete.topic.enable = true" | tee -a ~/kafka/config/server.properties
 ```
@@ -53,12 +54,28 @@ tmux new -s kafka-server-start -d
 tmux send-keys "~/kafka/bin/kafka-server-start.sh ~/kafka/config/server.properties" Enter
 ```
 
+#### `tmux` essential commands
+```bash
+# To list tmux active sessions
+tmux ls
+# To re-open a tmux session
+tmux attach-session -t <session_identifier> # ici jekyll
+# To end a tmux session
+tmux kill-session -t <session_identifier>
+```
 ## Start the tracking app
 
 ```bash
 # Download this repo
 git clone https://github.com/ds4es/tracking-service-python-kafka
-# launch the app
+# Setup a Python environment for your app
+cd ./tracking-service-python-kafka
+python3 -m venv ./env
+# Activate this environment
+source ./env/bin/activate
+# Install requirements
+pip install -r requirements.txt
+# Launch the app
 python app.py
 ```
 
@@ -70,21 +87,7 @@ python kafka_stream_producer_alpha.py
 python kafka_stream_producer_beta.py
 ```
 
-## Additional setup
-
-We don't need any retention for our service as we only want last GPS location updates. Therfore we setup the topic retention to 0 ms. (By default the retention is set to 168 hours, cf. [Kafka documentation - log.retention.hours](https://kafka.apache.org/documentation/#log.retention.hours))  
-```bash
- ~/kafka/bin/kafka-configs.sh --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --alter --topic ${YOUR_TOPIC_NAME} --add-config retention.ms=0
-```
-
-For how long data is stored in kafka server? https://stackoverflow.com/questions/49978708/for-how-long-data-is-stored-in-kafka-server
-
-## Kafka basic commands
-
-Create a Kafka topic
-```bash
-~/kafka/bin/kafka-topics.sh --create --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --replication-factor 1 --partitions 1 --topic ${YOUR_TOPIC_NAME} --config retention.hours=hours_to_keep_log_file
-```
+## Kafka basic comands
 
 List all Kafka topics
 ```bash
@@ -99,6 +102,43 @@ Check a Kafka topic information
 Delete a Kafka topic
 ```bash
 ~/kafka/bin/kafka-topics.sh --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --delete --topic ${YOUR_TOPIC_NAME}
+```
+
+## Additional setup
+
+#### Apache Kafka retention
+We don't need any retention for our service as we only want last GPS location updates. Therfore we setup the topic retention to 0 ms. (By default the retention is set to 168 hours, cf. [Kafka documentation - log.retention.hours](https://kafka.apache.org/documentation/#log.retention.hours))  
+```bash
+ ~/kafka/bin/kafka-configs.sh --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --alter --topic ${YOUR_TOPIC_NAME} --add-config retention.ms=0
+```
+
+#### To serve under Apache
+```
+sudo dnf install httpd -y
+sudo mkdir /etc/httpd/sites-available /etc/httpd/sites-enabled
+
+echo '
+IncludeOptional sites-enabled/*.conf
+' | sudo tee -a /etc/httpd/conf/httpd.conf
+
+echo '
+<VirtualHost *:80>
+    ServerName your_server_name
+
+    ProxyPreserveHost On
+    ProxyPass / http://127.0.0.1:5001/
+    ProxyPassReverse / http://127.0.0.1:5001/
+</VirtualHost>
+' | sudo tee /etc/httpd/sites-available/example.com.conf
+
+sudo ln -s /etc/httpd/sites-available/your_domain_name.conf /etc/httpd/sites-enabled/your_domain_name.conf
+sudo systemctl restart httpd
+
+## Kafka basic commands
+
+Create a Kafka topic
+```bash
+~/kafka/bin/kafka-topics.sh --create --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --replication-factor 1 --partitions 1 --topic ${YOUR_TOPIC_NAME} --config retention.hours=hours_to_keep_log_file
 ```
 
 ## Reference
