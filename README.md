@@ -89,6 +89,10 @@ python kafka_stream_producer_beta.py
 
 ## Kafka basic comands
 
+Create a Kafka topic
+```bash
+~/kafka/bin/kafka-topics.sh --create --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --replication-factor 1 --partitions 1 --topic ${YOUR_TOPIC_NAME} --config retention.hours=hours_to_keep_log_file
+```
 List all Kafka topics
 ```bash
 ~/kafka/bin/kafka-topics.sh --list --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT}
@@ -113,7 +117,7 @@ We don't need any retention for our service as we only want last GPS location up
 ```
 
 #### To serve under Apache
-```
+```bash
 # Install Apache
 sudo dnf install httpd -y
 
@@ -139,18 +143,11 @@ echo '
 
 # Enable it with a symbolic link
 sudo ln -s /etc/httpd/sites-available/your_domain_name.conf /etc/httpd/sites-enabled/your_domain_name.conf
-# Start or restart Apache
 
+# Start or restart Apache
 sudo systemctl restart httpd
 ```
 The app should be broadcast under your server ip address and `your_domain_name`.
-
-## Kafka basic commands
-
-Create a Kafka topic
-```bash
-~/kafka/bin/kafka-topics.sh --create --bootstrap-server ${BROKER_IP_ADDRESS}:${BROKER_PORT} --replication-factor 1 --partitions 1 --topic ${YOUR_TOPIC_NAME} --config retention.hours=hours_to_keep_log_file
-```
 
 ## Reference
 * [Kafka Documentation](https://kafka.apache.org/documentation/)
