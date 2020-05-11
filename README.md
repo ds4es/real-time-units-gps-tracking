@@ -67,9 +67,9 @@ tmux kill-session -t <session_identifier>
 
 ```bash
 # Download this repo
-git clone https://github.com/ds4es/tracking-service-python-kafka
+git clone https://github.com/ds4es/real-time-units-gps-tracking
 # Setup a Python environment for your app
-cd ./tracking-service-python-kafka
+cd ./real-time-units-gps-tracking
 python3 -m venv ./env
 # Activate this environment
 source ./env/bin/activate
@@ -139,7 +139,7 @@ echo '
     ProxyPass / http://127.0.0.1:5001/
     ProxyPassReverse / http://127.0.0.1:5001/
 </VirtualHost>
-' | sudo tee /etc/httpd/sites-available/example.com.conf
+' | sudo tee /etc/httpd/sites-available/your_domain_name.conf
 
 # Enable it with a symbolic link
 sudo ln -s /etc/httpd/sites-available/your_domain_name.conf /etc/httpd/sites-enabled/your_domain_name.conf
@@ -148,6 +148,10 @@ sudo ln -s /etc/httpd/sites-available/your_domain_name.conf /etc/httpd/sites-ena
 sudo systemctl restart httpd
 ```
 The app should be broadcast under your server ip address and `your_domain_name`.
+
+## Next step
+
+For moving markers like Uber cars check: https://github.com/amanjeetsingh150/UberCarAnimation
 
 ## Reference
 * [Kafka Documentation](https://kafka.apache.org/documentation/)
