@@ -8,9 +8,9 @@ python kafka_stream_producer_beta.py
 Forked from: https://github.com/code-and-dogs/liveMaps
 
 * **Apache Kafka** is a scalable, fault-tolerant, publish-subscribe messaging system, used for building real-time data pipelines and streaming apps. It uses Zookeeper to track status of kafka cluster nodes. It also keeps track of Kafka topics, partitions etc.
-
 * **ZooKeeper** is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
 
+For MS Windows user see: [README_for_ms_windows_user.md](README_for_ms_windows_user.md)
 
 ## Install prerequisites (for RHEL 8/CentOS 8)
 ```bash
@@ -87,7 +87,7 @@ python kafka_stream_producer_alpha.py
 python kafka_stream_producer_beta.py
 ```
 
-## Kafka basic comands
+## Kafka basic commands
 
 Create a Kafka topic
 ```bash
