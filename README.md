@@ -1,8 +1,8 @@
 Implementation of a real-time GPS tracking service with Python and Apache Kafka. For demonstration, 2 fake GPS positionning services can be launch with the following Python scripts:
 
 ```bash
-python kafka_stream_producer_alpha.py
-python kafka_stream_producer_beta.py
+python kafka_stream_producer_london_alpha.py
+python kafka_stream_producer_paris_beta.py
 ``` 
 
 Forked from: https://github.com/code-and-dogs/liveMaps
@@ -76,15 +76,15 @@ source ./env/bin/activate
 # Install requirements
 pip install -r requirements.txt
 # Launch the app
-python app.py
+python app_london.py
 ```
 
 ## Start GPS positionning providers
 
 *(Under another terminal)*
 ```bash
-python kafka_stream_producer_alpha.py
-python kafka_stream_producer_beta.py
+python kafka_stream_producer_london_alpha.py
+python kafka_stream_producer_london_beta.py
 ```
 
 ## Kafka basic commands

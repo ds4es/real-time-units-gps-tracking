@@ -2,26 +2,22 @@
  * Load the map and manage events relative to
  **/
 
-const STARTING_MAP_CENTER = [51.505, -0.09];
-const STARTING_ZOOM = 13;
-const MAX_ZOOM = 18;
-
 // Instantiates a map object
-var tracking_map = L.map('map_container').setView(STARTING_MAP_CENTER, STARTING_ZOOM);
+var tracking_map = L.map('map_container').setView(MAP_STARTING_CENTER, MAP_STARTING_ZOOM);
 
 // Hold markers plot on the map
 var markers = {};
 // Hold different marker designs 
 var icons = {};
 
-var display_tooltips = true;
+var display_tooltips = false;
 
 // A demo and usage of various free tile providers can be found here:
 // https://leaflet-extras.github.io/leaflet-providers/preview/
 // Instantiates a tile layer object for the given URL
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: MAX_ZOOM,
+L.tileLayer(MAP_URL_TEMPLATE, {
+    attribution: MAP_ATTRIBUTION,
+    maxZoom: MAP_MAX_ZOOM,
     id: 'background_map',
 }).addTo(tracking_map);
 
@@ -41,7 +37,7 @@ function create_icon(string) {
 
 // Opens a connection to the server to begin receiving events 
 // (or data or messages) from it
-var source = new EventSource('/topic/geodata_stream_topic_123'); //ENTER YOUR TOPICNAME HERE
+var source = new EventSource('/topic/' + KAFKA_TOPIC); //ENTER YOUR TOPICNAME HERE
 
 // Message handler for new message events
 source.addEventListener('message', function(e){

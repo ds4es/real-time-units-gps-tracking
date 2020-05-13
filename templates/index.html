@@ -16,12 +16,12 @@
     <!-- your custom styles -->
     <link rel="stylesheet" href="../static/css/custom.css"/>
 
-    <title>{{Title}}</title>
+    <title>{{PAGE_TITLE}}</title>
 </head>
 <body>
-    <h1>{{Title}}</h1>
+    <h1>{{PAGE_TITLE}}</h1>
 
-    <div id="map_container" style = "width:900px; height:580px;"></div>
+    <div id="map_container" style = "width:100%; height:700px;"></div>
     <br>
     
     Show/Hide unit informations:<br>
@@ -31,6 +31,16 @@
         <label data-off="&#10006;" data-on="&#10004;"></label>
     </span>
 
+    <script type="text/javascript">
+        const MAP_URL_TEMPLATE = {{MAP_URL_TEMPLATE | tojson }};
+        const MAP_ATTRIBUTION = {{ MAP_ATTRIBUTION | tojson }};
+        const MAP_STARTING_CENTER = {{ MAP_STARTING_CENTER  | tojson }};
+        const MAP_STARTING_ZOOM = {{ MAP_STARTING_ZOOM  | tojson }};
+        const MAP_MAX_ZOOM = {{ MAP_MAX_ZOOM  | tojson }};
+
+        const KAFKA_TOPIC = {{ KAFKA_TOPIC  | tojson }};
+
+    </script>
     <!-- required custom tools -->
     <script src="../static/js/utils.js"></script>
     <!-- load the map and manage events relative to -->
