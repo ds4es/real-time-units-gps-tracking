@@ -1,15 +1,15 @@
 /**
  * Load the map and manage events relative to
  **/
-
-// Instantiates a map object
+ 
+ // Instantiates a map object
 var tracking_map = L.map('map_container').setView(MAP_STARTING_CENTER, MAP_STARTING_ZOOM);
 
-// Hold markers plot on the map
+// Hold marker plots on the map
 var markers = {};
-// Hold different marker designs 
-var icons = {};
-
+// Hold different marker colors 
+var marker_colors = {};
+// Marker tooltips initial display option
 var display_tooltips = false;
 
 // A demo and usage of various free tile providers can be found here:
@@ -20,20 +20,6 @@ L.tileLayer(MAP_URL_TEMPLATE, {
     maxZoom: MAP_MAX_ZOOM,
     id: 'background_map',
 }).addTo(tracking_map);
-
-// Design property definition for a marker
-// The color is compute based on the 'string' parameter
-function create_icon(string) {
-    const marker_html_styles = 'background-color: ' + string_to_color(string) +';'
-
-    icons[string] = L.divIcon({
-        className: "custom_pin",
-        iconAnchor: [0, 24],
-        labelAnchor: [-6, 0],
-        popupAnchor: [0, -36],
-        html: '<span class="unit_marker" style="'+ marker_html_styles + '"/>'
-    })
-}
 
 // Opens a connection to the server to begin receiving events 
 // (or data or messages) from it
@@ -58,12 +44,26 @@ source.addEventListener('message', function(e){
         // The first time a service is handle, we create an array to 
         // track its units
         markers[obj.service] = [];
-        // ..and we create a specific unit icon for it
-        create_icon(obj.service);
+        // ..and we define and hold a color for this service
+		marker_colors[string] = string_to_color(obj.service) ;
     }
 
+	// Define the color of the marker
+	// If a color argument is passed with the message the marker it will be used
+	// otherwise marker_colors will be used 
+	if (obj.color) {
+		marker_color = obj.color;
+	} else
+		marker_color = marker_colors[obj.service];
+
     // Plot the new position of the new received unit position 
-    markers[obj.service][obj.unit] = L.marker([obj.latitude, obj.longitude], {icon: icons[obj.service]}).addTo(tracking_map);
+    markers[obj.service][obj.unit] = L.marker([obj.latitude, obj.longitude], {icon: L.divIcon({
+        className: "custom_pin",
+        iconAnchor: [0, 24],
+        labelAnchor: [-6, 0],
+        popupAnchor: [0, -36],
+        html: '<span class="unit_marker" style="background-color: '+marker_color+'"/>'
+    })}).addTo(tracking_map);
     // Add a tooltip to it with the given information
     markers[obj.service][obj.unit].bindTooltip(
         "Service: "  + obj.service + "<br>Unit: " + obj.unit + "<br>Datetime: " + obj.datetime
@@ -76,11 +76,11 @@ source.addEventListener('message', function(e){
 }, false);
 
 function toggle_button() {
-    if(document.getElementById("toggle_button").value=="OFF") {
-        document.getElementById("toggle_button").value="ON";
-        display_tooltips = true;
-    } else {
+    if(document.getElementById("toggle_button").value=="ON") {
         document.getElementById("toggle_button").value="OFF";
         display_tooltips = false;
+    } else {
+        document.getElementById("toggle_button").value="ON";
+        display_tooltips = true;
     }
 }

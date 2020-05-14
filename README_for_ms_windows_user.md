@@ -52,21 +52,21 @@ conda install --file requirements.txt
 
 Start a signal provider from one Anaconda Prompt
 ```bash
-python kafka_stream_producer_alpha.py
+python kafka_stream_producer_london_alpha.py
 ```
 
 [Optional] Start another signal provider under another Anaconda Prompt
 ```bash
 cd path/to/real-time-units-gps-tracking
 activate real-time-units-gps-tracking
-python kafka_stream_producer_beta.py
+python kafka_stream_producer_london_beta.py
 ```
 
 Under a third Anaconda prompt, launch the app
 ```bash
 cd path/to/real-time-units-gps-tracking
 activate real-time-units-gps-tracking
-python app.py
+python app_london.py
 ```
 
 The app should be accessible through a browser at: http://127.0.0.1:5001

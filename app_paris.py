@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/index.html')
 def index():
-    PAGE_TITLE='London Bus Live Map'
+    PAGE_TITLE='Paris Fire Brigade Live Map'
     
     MAP_URL_TEMPLATE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     MAP_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';

@@ -37,6 +37,7 @@ def generate_checkpoint(coordinates):
         data['unit'] = coordinates[i]['unit']
         data['latitude'] = coordinates[i]['coordinates'][1]
         data['longitude'] = coordinates[i]['coordinates'][0]
+        data['color'] = coordinates[i]['color']
         message = json.dumps(data)
         print(message)
         producer.produce(message.encode('ascii'))

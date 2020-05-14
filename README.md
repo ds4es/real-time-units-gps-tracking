@@ -2,7 +2,7 @@ Implementation of a real-time GPS tracking service with Python and Apache Kafka.
 
 ```bash
 python kafka_stream_producer_london_alpha.py
-python kafka_stream_producer_paris_beta.py
+python kafka_stream_producer_london_beta.py
 ``` 
 
 Forked from: https://github.com/code-and-dogs/liveMaps
