@@ -2,6 +2,30 @@ body {
 	background-color:#eee;
 }
 
+#map_view {
+    width: 100%;
+    height:700px;
+ 	position: relative;
+}
+
+#object_layer,
+#osm_layer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height:700px;
+}
+#osm_layer {
+    z-index: 4;
+    background:transparent;
+}
+#osm_layer {
+    /* For a dark base map */
+    filter: invert(100%) saturate(50%);
+    overflow: scroll;
+}
+
 .unit_marker {
 	width: 2rem; 
 	height: 2rem;

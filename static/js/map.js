@@ -3,8 +3,14 @@
  **/
  
  // Instantiates a map object
-var tracking_map = L.map('map_container').setView(MAP_STARTING_CENTER, MAP_STARTING_ZOOM);
+var osm_layer = L.map('osm_layer').setView(MAP_STARTING_CENTER, MAP_STARTING_ZOOM);
 
+ // Instantiates a map object
+var object_layer = L.map('object_layer').setView(MAP_STARTING_CENTER, MAP_STARTING_ZOOM);
+
+// To synchronize changes from object_layer to osm_layer
+osm_layer.sync(object_layer);
+        
 // Hold marker plots on the map
 var markers = {};
 // Hold different marker colors 
@@ -19,7 +25,7 @@ L.tileLayer(MAP_URL_TEMPLATE, {
     attribution: MAP_ATTRIBUTION,
     maxZoom: MAP_MAX_ZOOM,
     id: 'background_map',
-}).addTo(tracking_map);
+}).addTo(osm_layer);
 
 // Opens a connection to the server to begin receiving events 
 // (or data or messages) from it
@@ -38,14 +44,14 @@ source.addEventListener('message', function(e){
 
         // Remove the previous position of the unit before adding 
         // a new marker for it on the map
-        tracking_map.removeLayer(markers[obj.service][obj.unit]);
+        object_layer.removeLayer(markers[obj.service][obj.unit]);
         }
     } else {
         // The first time a service is handle, we create an array to 
         // track its units
         markers[obj.service] = [];
         // ..and we define and hold a color for this service
-		marker_colors[string] = string_to_color(obj.service) ;
+		marker_colors[obj.service] = string_to_color(obj.service) ;
     }
 
 	// Define the color of the marker
@@ -63,7 +69,7 @@ source.addEventListener('message', function(e){
         labelAnchor: [-6, 0],
         popupAnchor: [0, -36],
         html: '<span class="unit_marker" style="background-color: '+marker_color+'"/>'
-    })}).addTo(tracking_map);
+    })}).addTo(object_layer);
     // Add a tooltip to it with the given information
     markers[obj.service][obj.unit].bindTooltip(
         "Service: "  + obj.service + "<br>Unit: " + obj.unit + "<br>Datetime: " + obj.datetime

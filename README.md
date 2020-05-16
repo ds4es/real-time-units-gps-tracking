@@ -1,4 +1,8 @@
-Implementation of a real-time GPS tracking service with Python and Apache Kafka. For demonstration, 2 fake GPS positionning services can be launch with the following Python scripts:
+Implementation of a real-time GPS tracking service with Python and Apache Kafka. 
+
+[![IMAGE ALT TEXT HERE](static/img/real-time-units-gps-tracking.jpg)](https://www.youtube.com/watch?v=1Z_MxXHya84)
+
+For demonstration, fake GPS positionning services can be launch with the following Python scripts:
 
 ```bash
 python kafka_stream_producer_london_alpha.py
@@ -63,7 +67,7 @@ tmux attach-session -t <session_identifier>
 # To end a tmux session
 tmux kill-session -t <session_identifier>
 ```
-## Start the tracking app
+## Get and start the tracking app
 
 ```bash
 # Download this repo
@@ -75,17 +79,45 @@ python3 -m venv ./env
 source ./env/bin/activate
 # Install requirements
 pip install -r requirements.txt
-# Launch the app
-python app_london.py
 ```
 
-## Start GPS positionning providers
+#### Start GPS positionning providers
 
-*(Under another terminal)*
+For London Bus data
 ```bash
 python kafka_stream_producer_london_alpha.py
 python kafka_stream_producer_london_beta.py
 ```
+For Paris Fire Brigade data
+```bash
+python kafka_stream_producer_paris_alpha.py
+```
+
+For Jakarta Bus data
+```bash
+python kafka_stream_producer_jakarta_alpha.py
+```
+
+#### Launch the app
+
+In another terminal, load the Python environment
+```bash
+cd ./real-time-units-gps-tracking
+source ./env/bin/activate
+```
+For London Bus data map
+```bash
+python app_london.py
+```
+or for Paris Fire Brigade data map
+```bash
+python app_paris.py
+```
+or for Jakarta Bus data map
+```bash
+python app_jakarta.py
+```
+
 
 ## Kafka basic commands
 
