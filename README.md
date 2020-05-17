@@ -1,6 +1,6 @@
 Implementation of a real-time GPS tracking service with Python and Apache Kafka. 
 
-[![IMAGE ALT TEXT HERE](static/img/real-time-units-gps-tracking.jpg)](https://www.youtube.com/watch?v=1Z_MxXHya84)
+[![IMAGE ALT TEXT HERE](static/img/real-time-units-gps-tracking.jpg)](https://www.youtube.com/watch?v=4CzO6GJz9rw)
 
 For demonstration, fake GPS positionning services can be launch with the following Python scripts:
 
